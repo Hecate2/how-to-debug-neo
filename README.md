@@ -56,7 +56,7 @@ The following steps may fail if Visual Studio is not installed.
 
 #### Open `neo-node.sln` with Visual Studio and add projects to it
 
-Add projects neo, neo-vm and RpcServer (in neo-modules) to the solution. Add the 3 projects as project references for neo-cli. 
+Add projects neo, neo-vm and RpcServer (in neo-modules) to the solution. Add project neo as project reference for neo-cli. 
 
 The package dependencies of neo-cli should be cleared.
 
@@ -70,7 +70,7 @@ Paste the content of `neo-cli/config.testnet.json` into `neo-cli/config.json`. T
 
 Set neo-cli as the Startup project and debug it. It is likely that the cli would not run properly and throw some exceptions about leveldb. Just copy `libleveldb.dll` to `neo-cli\bin\Debug\net6.0`, and `LevelDBStore.dll` to `neo-cli\bin\Debug\net6.0\Plugins`. 
 
-If neo-cli is started properly, execute `show states` and watch if it is synchronizing blocks. 
+If neo-cli is started properly, execute `show state` and watch if it is synchronizing blocks. 
 
 #### Sync blocks at insane speed!
 
@@ -82,7 +82,7 @@ Launch neo-cli.
 
 #### Install RpcServer plugin
 
-Just execute `install RpcServer` in `neo-cli`. But remember that the installed dlls cannot be debugged! You can replace all the RpcServer.dll with those compiled in debugging mode from the project RpcServer in `neo-modules`. 
+Just execute `install RpcServer` in `neo-cli`. But remember that the installed dlls cannot be debugged! You can replace all the RpcServer.dll with those compiled in debugging mode from the project RpcServer in `neo-modules`(Move "RpcServer" and "RpcServer.dll" from /neo-cli/bin/Debug/net6.0/ to /RpcServer/bin/Debug/net6.0/, change contents in /RpcServer/bin/Debug/net6.0/RpcServer/config.json  in accordance to contents in /neo-cli/config.json). 
 
 Execute `start RpcServer` after RpcServer with debuggable dlls and correct configs, or just restart neo-cli. 
 
