@@ -56,7 +56,7 @@ The following steps may fail if Visual Studio is not installed.
 
 #### Open `neo-node.sln` with Visual Studio and add projects to it
 
-Add projects neo, neo-vm and RpcServer (in neo-modules) to the solution. Add project neo as project reference for neo-cli. 
+Add projects neo, neo-vm and RpcServer (in neo-modules) to the solution. Add project neo as project reference for neo-cli. If there is any compilation error, especially package dependency conflict, consider adding neo-vm as project reference for neo-cli.
 
 The package dependencies of neo-cli should be cleared.
 
@@ -66,7 +66,7 @@ The package dependencies of neo-cli should be cleared.
 
 #### Run neo-cli on testnet at debug mode
 
-Paste the content of `neo-cli/config.testnet.json` into `neo-cli/config.json`. This ensures that neo-cli connects to the testnet instead of the mainnet. 
+Paste the content of `neo-cli/config.testnet.json` into `neo-cli/config.json`, replacing the original `neo-cli/config.json`. This ensures that neo-cli connects to the testnet instead of the mainnet. 
 
 Set neo-cli as the Startup project and debug it. It is likely that the cli would not run properly and throw some exceptions about leveldb. Just copy `libleveldb.dll` to `neo-cli\bin\Debug\net6.0`, and `LevelDBStore.dll` to `neo-cli\bin\Debug\net6.0\Plugins`. 
 
@@ -82,9 +82,9 @@ Launch neo-cli.
 
 #### Install RpcServer plugin
 
-Just execute `install RpcServer` in `neo-cli`. But remember that the installed dlls cannot be debugged! You can replace all the RpcServer.dll with those compiled in debugging mode from the project RpcServer in `neo-modules`(Move "RpcServer" and "RpcServer.dll" from /neo-cli/bin/Debug/net6.0/ to /RpcServer/bin/Debug/net6.0/, change contents in /RpcServer/bin/Debug/net6.0/RpcServer/config.json  in accordance to contents in /neo-cli/config.json). 
+A simple way is just to execute `install RpcServer` in `neo-cli`, and edit `neo-cli/bin/Debug/net6.0/Plugins/RpcServer/config.json` to make sure that your configs matches the testnet. For example, the `network` value should be the same as that in `neo-cli/config.testnet.json`, and meanwhile you probably want to leave `"DisabledMethods": []`. You may also consider larger values for `MaxGasInvoke`, `MaxConcurrentConnections` and `MaxIteratorResultItems`. But remember that the installed dlls cannot be debugged! You can replace the installed `neo-cli/bin/Debug/net6.0/Plugins/RpcServer.dll` with that compiled in debugging mode from the project RpcServer in `neo-modules`. Specifically, add project reference `neo` to `RpcServer`, and build `RpcServer` in debug mode. Move `RpcServer.dll` and maybe directory `RpcServer` from `neo-modules/src/RpcServer/bin/Debug/net6.0/` to `neo-cli/bin/Debug/net6.0/Plugins`. 
 
-Execute `start RpcServer` after RpcServer with debuggable dlls and correct configs, or just restart neo-cli. 
+Execute `start RpcServer` after RpcServer is equipped with debuggable dlls and correct configs, or just restart neo-cli. 
 
 #### Install neo-mamba
 
