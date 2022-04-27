@@ -56,13 +56,15 @@ The following steps may fail if Visual Studio is not installed.
 
 #### Open `neo-node.sln` with Visual Studio and add projects to it
 
-Add projects neo, neo-vm and RpcServer (in neo-modules) to the solution. Add project neo as project reference for neo-cli. If there is any compilation error, especially package dependency conflict, consider adding neo-vm as project reference for neo-cli.
-
-The package dependencies of neo-cli should be cleared.
+Add projects `neo`, `neo-vm` and `RpcServer` (in `neo-modules`) to the solution. Add project `neo` as project reference for neo-cli. If there is any compilation error, especially package dependency conflict, consider adding neo-vm as project reference for neo-cli. The package dependencies of neo-cli should be cleared. Optionally and optimally, let `neo-cli` refer to project `RpcServer`, and `RpcServer` refer to `neo`. 
 
 ![add-existing-project](images/add-existing-project.png)
 
 ![add-project-reference](images/add-project-reference.png)
+
+Let's view the project references of me. `neo-vm` does not need any dependency package or project reference. 
+
+![neo-cli-project-references](images/neo-cli-project-references.png)![neo-project-references](images/neo-project-references.png)![RpcServer-project-references](images/RpcServer-project-references.png)
 
 #### Run neo-cli on testnet at debug mode
 
@@ -82,7 +84,35 @@ Launch neo-cli.
 
 #### Install RpcServer plugin
 
-A simple way is just to execute `install RpcServer` in `neo-cli`, and edit `neo-cli/bin/Debug/net6.0/Plugins/RpcServer/config.json` to make sure that your configs matches the testnet. For example, the `network` value should be the same as that in `neo-cli/config.testnet.json`, and meanwhile you probably want to leave `"DisabledMethods": []`. You may also consider larger values for `MaxGasInvoke`, `MaxConcurrentConnections` and `MaxIteratorResultItems`. But remember that the installed dlls cannot be debugged! You can replace the installed `neo-cli/bin/Debug/net6.0/Plugins/RpcServer.dll` with that compiled in debugging mode from the project RpcServer in `neo-modules`. Specifically, add project reference `neo` to `RpcServer`, and build `RpcServer` in debug mode. Move `RpcServer.dll` and maybe directory `RpcServer` from `neo-modules/src/RpcServer/bin/Debug/net6.0/` to `neo-cli/bin/Debug/net6.0/Plugins`. Add project reference `RpcServer` for `neo-cli`.  
+If you did not let `neo-cli` refer to `RpcServer`, a simple way here is just to execute `install RpcServer` in `neo-cli` (But remember that the installed `RpcServer` cannot be debugged!)
+
+For a debuggable `RpcServer`, you can replace the installed `neo-cli/bin/Debug/net6.0/Plugins/RpcServer.dll` with that compiled in debugging mode from the project RpcServer in `neo-modules`. Specifically, add project reference `neo` to `RpcServer`, and build `RpcServer` in debug mode. Move `RpcServer.dll` and maybe directory `RpcServer` from `neo-modules/src/RpcServer/bin/Debug/net6.0/` to `neo-cli/bin/Debug/net6.0/Plugins`. Add project reference `RpcServer` for `neo-cli`.  
+
+Now edit `neo-cli/bin/Debug/net6.0/Plugins/RpcServer/config.json` to make sure that your configs matches the testnet. For example, the `network` value should be the same as that in `neo-cli/config.testnet.json`, and meanwhile you probably want to leave `"DisabledMethods": []`. You may also consider larger values for `MaxGasInvoke`, `MaxConcurrentConnections` and `MaxIteratorResultItems`. Watch my config as an example for testnet T4 (with neo-cli 3.1.0):
+
+```json
+{
+  "PluginConfiguration": {
+    "Servers": [
+      {
+        "Network": 877933390,
+        "BindAddress": "127.0.0.1",
+        "Port": 10332,
+        "SslCert": "",
+        "SslCertPassword": "",
+        "TrustedAuthorities": [],
+        "RpcUser": "",
+        "RpcPass": "",
+        "MaxGasInvoke": 200,
+        "MaxFee": 0.1,
+        "MaxConcurrentConnections": 40,
+        "MaxIteratorResultItems": 100,
+        "DisabledMethods": []
+      }
+    ]
+  }
+}
+```
 
 Execute `start RpcServer` after RpcServer is equipped with debuggable dlls and correct configs, or just restart neo-cli. 
 
