@@ -154,9 +154,8 @@ Congratulations. You are now probably able to inspect the execution of all the a
 
 Make sure your neo-cli has been equipped with the plugin `RpcServer`, and that the config (especially `Network`, `MaxGasInvoke`, `MaxFee`, `MaxIteratorResultItems`) is proper. You probably would like to leave `"DisabledMethods": []` to `openwallet` from another process. 
 
-Certainly you can use tools like [Hoppscotch](https://github.com/hoppscotch/hoppscotch) as an HTTP client, but you may also use the client module [here](https://github.com/Hecate2/neo-ruler) with `git clone git@github.com:Hecate2/neo-ruler.git` and check out the directories `neo_test_with_rpc` and `tests` as a non-official Python RPC client. This package rules out the difficulty from data conversion, and allows you to interact with neo-cli in very natural, detail-irrelevant codes. There are also official RPC clients built in a series of common programming languages, included in official Neo SDKs. 
+Certainly you can use tools like [Hoppscotch](https://github.com/hoppscotch/hoppscotch) as an HTTP client, but you may also use the client module [neo-fairy-client](https://github.com/Hecate2/neo-fairy-client/) with `git clone git@github.com:Hecate2/neo-fairy-client.git` as a non-official Python RPC client. This package rules out the difficulty from data conversion, and allows you to interact with neo-cli in very natural, detail-irrelevant codes. There are also official RPC clients built in a series of common programming languages, included in official Neo SDKs. Consider [neo-test](https://github.com/ngdenterprise/neo-test) or `NeoRpcClient` in [neo-mamba](https://github.com/CityOfZion/neo-mamba).
 
-Make sure your `invokefunction` calls can break at breakpoints in `neo-vm`. 
+Make sure your `invokefunction` calls can break at breakpoints in `neo-vm`. If your RPC calls are well debuggable, consider upgrading your `RpcServer` with [neo-fairy-test](https://github.com/Hecate2/neo-fairy-test/).
 
 To be continued...
-
