@@ -158,4 +158,33 @@ Certainly you can use tools like [Hoppscotch](https://github.com/hoppscotch/hopp
 
 Make sure your `invokefunction` calls can break at breakpoints in `neo-vm`. If your RPC calls are well debuggable, consider upgrading your `RpcServer` with [neo-fairy-test](https://github.com/Hecate2/neo-fairy-test/).
 
+#### Compile your contract with .nefdbgnfo!
+
+If your contract is written in Python, the compiler `neo3-boa` should automatically give you an `.nefdbgnfo` file along with the `.nef` binary contract. This file is important, mapping the compiled byte-code neo-vm instructions back to the high-level Python source codes. 
+
+If the contract is in C#, the compiler [nccs](https://www.nuget.org/packages/Neo.Compiler.CSharp/) may not give the `.nefdbgnfo` file. You can compile your contract in this way:
+
+```bash
+nccs YourContractCsprojFile.csproj --debug
+```
+
+`dotnet restore` and `dotnet build` may be needed for successful compilation (alternatively, click the build and run button of your contract's csproj in your Visual Studio). You can also run your compiler with source codes by `git clone git@github.com:neo-project/neo-devpack-dotnet.git` and by running the project `Neo.Compiler.CSharp` inside, with argument of your contract `.csproj` file and `--debug` flag.
+
+#### DumpNef
+
+https://www.nuget.org/packages/DevHawk.DumpNef/
+
+This is a tool to inspect the disassembly of your `.nef` smart contract. Certainly you can debug with [neo-debugger](https://github.com/neo-project/neo-debugger), but at assembly level with source codes of `neo` and `neo-vm`, you can inspect all the confusing exceptions. For a neo 3.1.0 compatible version, install `DumpNef` with
+
+```bash
+dotnet tool install --global DevHawk.DumpNef --version 3.1.9
+```
+
+Then, assuring that `.nefdbgnfo` is along with your `.nef` contract file,
+
+```bash
+dumpnef YourNefFile.nef
+dumpnef YourNefFile.nef > YourNefFile.nef.txt
+```
+
 To be continued...
