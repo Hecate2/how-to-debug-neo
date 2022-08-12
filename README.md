@@ -1,3 +1,5 @@
+Prerequisites: English, Windows cmd or Linux bash, understanding of Windows PATH (or the counterpart on Linux), Git (clone, pull, checkout, branch), 50GB SSD, 8 GB memory.
+
 In many situations, you may really enjoy debugging your neo3 smart contract using [neo-express](https://github.com/neo-project/neo-express). However, you may have met some frustrating exceptions raised deep from the source code of neo that you have no idea how to fix them. Besides, you may desire to inspect a running [neo-node](https://github.com/neo-project/neo-node/) instead of its static source codes. 
 
 Follow this guide to set a full neo-cli (3.1.0) on Windows 10 that can be debugged! We will attempt to install the C# environment for neo, and interact with the blockchain using Python. 
@@ -187,4 +189,6 @@ dumpnef YourNefFile.nef
 dumpnef YourNefFile.nef > YourNefFile.nef.txt
 ```
 
-To be continued...
+#### Using [Fairy](https://github.com/Hecate2/neo-fairy-test/)
+
+This is something similar to but more powerful than [hardhat](https://github.com/NomicFoundation/hardhat) and [truffle](https://github.com/trufflesuite/truffle). Try placing a Fairy [release](https://github.com/Hecate2/neo-fairy-test/releases) as a plugin of neo-cli (which may not work correctly on different computers...) or building Fairy by yourself along with the source codes required by [Fairy.csproj](https://github.com/Hecate2/neo-fairy-test/blob/master/Fairy.csproj) (which requires a deeper understanding of C# building process). If you have trouble building or resolving project dependencies of Fairy, you may refer to the dependencies of [neo-modules](https://github.com/neo-project/neo-modules). 
