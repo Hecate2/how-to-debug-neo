@@ -2,7 +2,7 @@ Prerequisites: English, Windows cmd or Linux bash, understanding of Windows PATH
 
 In many situations, you may really enjoy debugging your neo3 smart contract using [neo-express](https://github.com/neo-project/neo-express). However, you may have met some frustrating exceptions raised deep from the source code of neo that you have no idea how to fix them. Besides, you may desire to inspect a running [neo-node](https://github.com/neo-project/neo-node/) instead of its static source codes. 
 
-Follow this guide to set a full neo-cli (3.1.0) on Windows 10 that can be debugged! We will attempt to install the C# environment for neo, and interact with the blockchain using Python. 
+Follow this guide to set a full neo-cli (3.4.0) on Windows 10 that can be debugged! We will attempt to install the C# environment for neo, and interact with the blockchain using Python. 
 
 Some screenshots in this guide might be in Chinese. 
 
@@ -50,7 +50,7 @@ Do not forget to consider `git checkout` a proper commit or branch for each repo
 
 #### [Download the **N3 testnet** offline package](https://sync.ngd.network/)
 
-Make sure you are actually downloading N3 testnet full offline package. Unzip it and get the file `chain.0.acc`.
+Make sure you are actually downloading N3 testnet 5 (N3T5) full offline package. Unzip it and get the file `chain.0.acc`.
 
 #### Wait for Visual Studio Installation...
 
@@ -90,16 +90,16 @@ If you did not let `neo-cli` refer to `RpcServer`, a simple way here is just to 
 
 For a debuggable `RpcServer`, you can replace the installed `neo-cli/bin/Debug/net6.0/Plugins/RpcServer.dll` with that compiled in debugging mode from the project RpcServer in `neo-modules`. Specifically, add project reference `neo` to `RpcServer`, and build `RpcServer` in debug mode. Move `RpcServer.dll` and maybe directory `RpcServer` from `neo-modules/src/RpcServer/bin/Debug/net6.0/` to `neo-cli/bin/Debug/net6.0/Plugins`. Add project reference `RpcServer` for `neo-cli`.  
 
-Now edit `neo-cli/bin/Debug/net6.0/Plugins/RpcServer/config.json` to make sure that your configs matches the testnet. For example, the `network` value should be the same as that in `neo-cli/config.testnet.json`, and meanwhile you probably want to leave `"DisabledMethods": []`. You may also consider larger values for `MaxGasInvoke`, `MaxConcurrentConnections` and `MaxIteratorResultItems`. Watch my config as an example for testnet T4 (with neo-cli 3.1.0):
+Now edit `neo-cli/bin/Debug/net6.0/Plugins/RpcServer/config.json` to make sure that your configs matches the testnet. For example, the `network` value should be the same as that in `neo-cli/config.testnet.json`, and meanwhile you probably want to leave `"DisabledMethods": []`. You may also consider larger values for `MaxGasInvoke`, `MaxConcurrentConnections` and `MaxIteratorResultItems`. Watch my config as an example for testnet T5 (with neo-cli 3.4.0):
 
 ```json
 {
   "PluginConfiguration": {
     "Servers": [
       {
-        "Network": 877933390,
-        "BindAddress": "127.0.0.1",
-        "Port": 10332,
+        "Network": 894710606,
+        "BindAddress": "0.0.0.0",
+        "Port": 16868,
         "SslCert": "",
         "SslCertPassword": "",
         "TrustedAuthorities": [],
@@ -109,7 +109,9 @@ Now edit `neo-cli/bin/Debug/net6.0/Plugins/RpcServer/config.json` to make sure t
         "MaxFee": 0.1,
         "MaxConcurrentConnections": 40,
         "MaxIteratorResultItems": 100,
-        "DisabledMethods": []
+        "DisabledMethods": [],
+        "SessionEnabled": true,
+        "SessionExpirationTime": 86400
       }
     ]
   }
