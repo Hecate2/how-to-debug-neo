@@ -2,13 +2,15 @@ Prerequisites: English, Windows cmd or Linux bash, understanding of Windows PATH
 
 In many situations, you may really enjoy debugging your neo3 smart contract using [neo-express](https://github.com/neo-project/neo-express). However, you may have met some frustrating exceptions raised deep from the source code of neo that you have no idea how to fix them. Besides, you may desire to inspect a running [neo-node](https://github.com/neo-project/neo-node/) instead of its static source codes. 
 
-Follow this guide to set a full neo-cli (3.4.0) on Windows 10 that can be debugged! We will attempt to install the C# environment for neo, and interact with the blockchain using Python. 
+Follow this guide to set a full neo-cli (3.5.0) on Windows 10 that can be debugged! We will attempt to install the C# environment for neo, and interact with the blockchain using Python. 
 
 Some screenshots in this guide might be in Chinese. 
 
 #### Install Visual Studio 2022 (Community)
 
 Because Visual Studio 2019 does not natively support .NET 6.0, we had better use the latest version. 
+
+(In the near future, Neo will use .NET 7.0!)
 
 Choose .NET desktop development and C++ desktop development, and wipe of some unnecessary components. Here we do not consider Python, but you may also install Python workloads in Visual Studio. The following workloads should be enough (C++ environments are for Python). Be aware that **Windows 10 SDK is needed so that you can compile components of [neo-mamba](https://github.com/CityOfZion/neo-mamba).**
 
@@ -18,7 +20,7 @@ Choose .NET desktop development and C++ desktop development, and wipe of some un
 
 Let Visual Studio Installer download for you. We can just move on. 
 
-#### Install Python 3.8 (and maybe an IDE for Python)
+#### Install Python >=3.8 (or >=3.10 for the future) (and maybe an IDE for Python)
 
 3.9 is also OK, but not 3.7! I suggest downloading it from https://www.python.org/downloads/ .
 
@@ -72,7 +74,7 @@ Let's view the project references of me. `neo-vm` does not need any dependency p
 
 Paste the content of `neo-cli/config.testnet.json` into `neo-cli/config.json`, replacing the original `neo-cli/config.json`. This ensures that neo-cli connects to the testnet instead of the mainnet. 
 
-Set neo-cli as the Startup project and debug it. It is likely that the cli would not run properly and throw some exceptions about leveldb. Just copy `libleveldb.dll` to `neo-cli\bin\Debug\net6.0`, and `LevelDBStore.dll` to `neo-cli\bin\Debug\net6.0\Plugins`. 
+Set neo-cli as the Startup project and debug it. It is likely that the cli would not run properly and throw some exceptions about leveldb. Just copy `libleveldb.dll` to `neo-cli\bin\Debug\net6.0`, and `LevelDBStore.dll` to `neo-cli/bin/Debug/net6.0/Plugins/LevelDBStore`. 
 
 If neo-cli is started properly, execute `show state` and watch if it is synchronizing blocks. 
 
@@ -86,11 +88,13 @@ Launch neo-cli.
 
 #### Install RpcServer plugin
 
+Plugins should be put in `neo-cli/bin/Debug/net6.0/Plugins`. Assuming that you are going to install `SomePlugin`, you need to create a directory `SomePlugin` in `Plugins`, and put `SomePlugin.dll`  and its `config.json` into `Plugins/SomePlugin/`.
+
 If you did not let `neo-cli` refer to `RpcServer`, a simple way here is just to execute `install RpcServer` in `neo-cli` (But remember that the installed `RpcServer` cannot be debugged!)
 
-For a debuggable `RpcServer`, you can replace the installed `neo-cli/bin/Debug/net6.0/Plugins/RpcServer.dll` with that compiled in debugging mode from the project RpcServer in `neo-modules`. Specifically, add project reference `neo` to `RpcServer`, and build `RpcServer` in debug mode. Move `RpcServer.dll` and maybe directory `RpcServer` from `neo-modules/src/RpcServer/bin/Debug/net6.0/` to `neo-cli/bin/Debug/net6.0/Plugins`. Add project reference `RpcServer` for `neo-cli`.  
+For a debuggable `RpcServer`, you can replace the installed `neo-cli/bin/Debug/net6.0/Plugins/RpcServer/RpcServer.dll` with that compiled in debugging mode from the project RpcServer in `neo-modules`. Specifically, add project reference `neo` to `RpcServer`, and build `RpcServer` in debug mode. Move `RpcServer.dll` and maybe directory `RpcServer` from `neo-modules/src/RpcServer/bin/Debug/net6.0/` to `neo-cli/bin/Debug/net6.0/Plugins/RpcServer`. Add project reference `RpcServer` for `neo-cli`.  
 
-Now edit `neo-cli/bin/Debug/net6.0/Plugins/RpcServer/config.json` to make sure that your configs matches the testnet. For example, the `network` value should be the same as that in `neo-cli/config.testnet.json`, and meanwhile you probably want to leave `"DisabledMethods": []`. You may also consider larger values for `MaxGasInvoke`, `MaxConcurrentConnections` and `MaxIteratorResultItems`. Watch my config as an example for testnet T5 (with neo-cli 3.4.0):
+Now edit `neo-cli/bin/Debug/net6.0/Plugins/RpcServer/config.json` to make sure that your configs matches the testnet. For example, the `network` value should be the same as that in `neo-cli/config.testnet.json`, and meanwhile you probably want to leave `"DisabledMethods": []`. You may also consider larger values for `MaxGasInvoke`, `MaxConcurrentConnections` and `MaxIteratorResultItems`. Watch my config as an example for testnet T5 (with neo-cli 3.5.0):
 
 ```json
 {
@@ -118,7 +122,7 @@ Now edit `neo-cli/bin/Debug/net6.0/Plugins/RpcServer/config.json` to make sure t
 }
 ```
 
-Execute `start RpcServer` after RpcServer is equipped with debuggable dlls and correct configs, or just restart neo-cli. 
+Restart neo-cli to ensure that RpcServer is actually started. 
 
 #### Install neo-mamba
 
@@ -178,7 +182,7 @@ nccs YourContractCsprojFile.csproj --debug
 
 https://www.nuget.org/packages/DevHawk.DumpNef/
 
-This is a tool to inspect the disassembly of your `.nef` smart contract. Certainly you can debug with [neo-debugger](https://github.com/neo-project/neo-debugger), but at assembly level with source codes of `neo` and `neo-vm`, you can inspect all the confusing exceptions. For a neo 3.1.0 compatible version, install `DumpNef` with
+This is a tool to inspect the disassembly of your `.nef` smart contract. Certainly you can debug with [neo-debugger](https://github.com/neo-project/neo-debugger), but at assembly level with source codes of `neo` and `neo-vm`, you can inspect all the confusing exceptions. For a neo 3.5.0 compatible version, install `DumpNef` with
 
 ```bash
 dotnet tool install --global DevHawk.DumpNef --version 3.1.9
