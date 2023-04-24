@@ -137,7 +137,7 @@ This step involves C language compilation. I cannot really help if there is any 
 
 #### Wait for neo-cli block synchronization
 
-Execute `show state` in neo-cli, and wait for your local blocks to be synced to the latest height. 
+Execute `show state` in neo-cli, and wait for your local blocks to be synced to the latest height. **The info about your peers' IP/port/listen/height is NOT displayed when the offline package `chain.0.acc` is being used.** Do not panic if you run into a few exceptions (e.g. `Method XXX with X parameters doesn't exist in the contract ...`, `Object reference not set to an instance of an object.`). These exceptions are caused by invalid transactions relayed by users. 
 
 ![block-sync](images/block-sync.png)
 
