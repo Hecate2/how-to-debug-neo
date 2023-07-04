@@ -276,8 +276,8 @@ This is almost PBFT (ignore if you do not know it), only that voting is introduc
 1. The consensus node at PRIMARY VIEW drafts a new block, and relay it in `PrepareRequest`
 2. All the other consensus nodes, at BACKUP VIEW, **validates** that the new block in `PrepareRequest` is valid. 
 3. Each BACKUP node relays a `PrepareResponse` to agree on the new block.
-4. ANY node can send a `Commit` message, **trying to prove** to other nodes that it has collected enough `PrepareResponse` messages (that agrees with the new block) from more than 2/3 of consensus nodes.
-5. ANY node can finally publish the new block when it receives more than 2/3 `Commit` messages.
+4. ANY consensus node can send a `Commit` message, **trying to prove** to other nodes that it has collected enough `PrepareResponse` messages (that agrees with the new block) from more than 2/3 of consensus nodes.
+5. ANY consensus node can finally publish the new block when it receives more than 2/3 `Commit` messages.
 
 All the types of messages mentioned above, are of `ExtensiblePayload` type.
 
