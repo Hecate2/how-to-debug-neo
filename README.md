@@ -163,7 +163,11 @@ If the contract is in C#, the compiler [nccs](https://www.nuget.org/packages/Neo
 nccs YourContractCsprojFile.csproj --debug
 ```
 
+where `nccs` can be installed globally with `dotnet tool install --global Neo.Compiler.CSharp --version 3.5.0`.
+
 `dotnet restore` and `dotnet build` may be needed for successful compilation (alternatively, click the build and run button of your contract's csproj in your Visual Studio). You can also run your compiler with source codes by `git clone git@github.com:neo-project/neo-devpack-dotnet.git` and by running the project `Neo.Compiler.CSharp` inside, with argument of your contract `.csproj` file and `--debug` flag.
+
+For very complex contracts, you can `git clone git@github.com:neo-project/neo-devpack-dotnet.git`, edit the compiler codes and run/debug `src/Neo.Compiler.CSharp/Neo.Compiler.CSharp.csproj` (which is just `nccs`).
 
 #### DumpNef
 
