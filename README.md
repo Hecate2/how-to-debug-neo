@@ -58,11 +58,15 @@ The following steps may fail if Visual Studio is not installed.
 
 #### Open `neo-node.sln` with Visual Studio and add projects to it
 
-Add projects `neo`, `neo-vm` and `RpcServer` (in `neo-modules`) to the solution. Add project `neo` as project reference for neo-cli. If there is any compilation error, especially package dependency conflict, consider adding neo-vm as project reference for neo-cli. The package dependencies of neo-cli should be cleared. Optionally and optimally, let `neo-cli` refer to project `RpcServer`, and `RpcServer` refer to `neo`. 
+Add projects `neo`, `neo-vm` and `RpcServer` (in `neo-modules`) to the solution. Add project `neo` as project reference for neo-cli. If there is any compilation error, especially package dependency conflict, consider adding neo-vm as project reference for neo-cli. The package dependencies of neo-cli should be cleared. Optionally and optimally, let `neo-cli` refer to project `RpcServer`, and `RpcServer` refer to project `neo`. 
 
 ![add-existing-project](images/add-existing-project.png)
 
 ![add-project-reference](images/add-project-reference.png)
+
+Newcomers to Visual Studio or C# may wonder how to remove the package reference of `RpcServer` to `neo`, and let `RpcServer` refer to `Neo.csproj`. Actually you need to edit `neo-modules/src/Directory.Build.props`, commenting out the package reference:
+
+![Remove package reference of RpcServer](images/build-props.png)
 
 Let's view the project references of me. `neo-vm` does not need any dependency package or project reference. 
 
