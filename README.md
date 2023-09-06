@@ -8,9 +8,9 @@ Some screenshots in this guide might be in Chinese.
 
 #### Install Visual Studio 2022 (Community)
 
-Because Visual Studio 2019 does not natively support .NET 6.0, we had better use the latest version. 
+Because Visual Studio 2019 does not natively support .NET 6.0 & .NET 7.0, we had better use the latest version. 
 
-(In the near future, Neo will use .NET 7.0!)
+Neo 3.5.* is built with .NET 6.0, and Neo >= 3.6.0 with .NET 7.0.
 
 Choose .NET desktop development and C++ desktop development, and wipe of some unnecessary components. Here we do not consider Python, but you may also install Python workloads in Visual Studio. The following workloads should be enough (C++ environments are for Python). You can also install Windows 10 SDK (after you finish this tutorial), so that you can compile C(++)-related dependencies in the future. 
 
@@ -67,6 +67,15 @@ Add projects `neo`, `neo-vm` and `RpcServer` (in `neo-modules`) to the solution.
 Newcomers to Visual Studio or C# may wonder how to remove the package reference of `RpcServer` to `neo`, and let `RpcServer` refer to `Neo.csproj`. Actually you need to edit `neo-modules/src/Directory.Build.props`, commenting out the package reference:
 
 ![Remove package reference of RpcServer](images/build-props.png)
+
+You may also want to write a source code project reference in `Directory.Build.props`:
+
+```xml
+  <ItemGroup>
+    <!-- <PackageReference Include="Neo" Version="3.6.0" /> -->
+    <ProjectReference Include="..\..\..\neo\src\neo\neo.csproj" />
+  </ItemGroup>
+```
 
 Let's view the project references of me. `neo-vm` does not need any dependency package or project reference. 
 
@@ -175,12 +184,18 @@ For very complex contracts, you can `git clone git@github.com:neo-project/neo-de
 
 #### DumpNef
 
+For Neo >= 3.6.0:
+
+https://github.com/Hecate2/DumpNef/ (Inherited from [devhawk](https://github.com/devhawk/DumpNef/). Not surely works for now!)
+
+For Neo <= 3.5.*:
+
 https://www.nuget.org/packages/DevHawk.DumpNef/
 
 This is a tool to inspect the disassembly of your `.nef` smart contract. Certainly you can debug with [neo-debugger](https://github.com/neo-project/neo-debugger), but at assembly level with source codes of `neo` and `neo-vm`, you can inspect all the confusing exceptions. For a neo 3.5.0 compatible version, install `DumpNef` with
 
 ```bash
-dotnet tool install --global DevHawk.DumpNef --version 3.1.9
+dotnet tool install --global DevHawk.DumpNef --version 3.5.7
 ```
 
 Then, assuring that `.nefdbgnfo` is along with your `.nef` contract file,
