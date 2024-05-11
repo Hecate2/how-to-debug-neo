@@ -2,15 +2,15 @@ Prerequisites: English, Windows cmd or Linux bash, understanding of Windows PATH
 
 In many situations, you may really enjoy debugging your neo3 smart contract using [neo-express](https://github.com/neo-project/neo-express). However, you may have met some frustrating exceptions raised deep from the source code of neo that you have no idea how to fix them. Besides, you may desire to inspect a running [neo-node](https://github.com/neo-project/neo-node/) instead of its static source codes. 
 
-Follow this guide to set a full neo-cli (3.5.0) on Windows 10 that can be debugged! We will attempt to install the C# environment for neo, and interact with the blockchain using Python. 
+Follow this guide to set a full Neo.CLI (3.5.0) on Windows 10 that can be debugged! We will attempt to install the C# environment for neo, and interact with the blockchain using Python. 
 
 Some screenshots in this guide might be in Chinese. 
 
 #### Install Visual Studio 2022 (Community)
 
-Because Visual Studio 2019 does not natively support .NET 6.0 & .NET 7.0, we had better use the latest version. 
+Because Visual Studio 2019 does not natively support .NET 6.0 to .NET 8.0, we had better use the latest version. 
 
-Neo 3.5.* is built with .NET 6.0, and Neo >= 3.6.0 with .NET 7.0.
+Neo 3.5.* is built with .NET 6.0, and Neo 3.6.* with .NET 7.0, Neo 3.7.* with .NET 8.0.
 
 Choose .NET desktop development and C++ desktop development, and wipe of some unnecessary components. Here we do not consider Python, but you may also install Python workloads in Visual Studio. The following workloads should be enough (C++ environments are for Python). You can also install Windows 10 SDK (after you finish this tutorial), so that you can compile C(++)-related dependencies in the future. 
 
@@ -30,20 +30,24 @@ Ensure that Python executables are added to your PATH, and that the command `pip
 pip install requests
 ```
 
-#### Download codes of neo-cli and other projects
+#### Download codes of Neo.CLI and other projects
 
 ```bash
-git clone git@github.com:neo-project/neo-node.git
+git clone git@github.com:neo-project/neo.git
 ```
 
-And you may still need to download the [release](https://github.com/neo-project/neo-node/releases) of `neo-cli`. This is just for two `leveldb` dll files inside the released zip file: `Plugins/LevelDBStore.dll` and `libleveldb.dll`. The dlls will be copied into the compiled neo-node later. 
+And you may still need to download the [release](https://github.com/neo-project/neo-node/releases) of `Neo.CLI`. This is just for two `leveldb` dll files inside the released zip file: `Plugins/LevelDBStore.dll` and `libleveldb.dll`. The dlls will be copied into the compiled neo-node later. 
 
 Then you should also 
 
 ```bash
-git clone git@github.com:neo-project/neo.git
-git clone git@github.com:neo-project/neo-vm.git
 git clone git@github.com:neo-project/neo-modules.git
+```
+
+**Put your neo codes into neo-modules.** You should have a path that looks like:
+
+```
+neo-modules/neo/src/Neo.CLI
 ```
 
 Do not forget to consider `git checkout` a proper commit or branch for each repository, so that the versions of all these codes can match. 
@@ -57,6 +61,8 @@ Make sure you are actually downloading N3 testnet 5 (N3T5) full offline package.
 The following steps may fail if Visual Studio is not installed.
 
 #### Open `neo-node.sln` with Visual Studio and add projects to it
+
+**This is an outdated chapter for the time when Neo had separate repositories for each project. I keep the contents because they may still be helpful.**
 
 Add projects `neo`, `neo-vm` and `RpcServer` (in `neo-modules`) to the solution. Add project `neo` as project reference for neo-cli. If there is any compilation error, especially package dependency conflict, consider adding neo-vm as project reference for neo-cli. The package dependencies of neo-cli should be cleared. Optionally and optimally, let `neo-cli` refer to project `RpcServer`, and `RpcServer` refer to project `neo`. 
 
@@ -81,31 +87,31 @@ Let's view the project references of me. `neo-vm` does not need any dependency p
 
 ![neo-cli-project-references](images/neo-cli-project-references.png)![neo-project-references](images/neo-project-references.png)![RpcServer-project-references](images/RpcServer-project-references.png)
 
-#### Run neo-cli on testnet at debug mode
+#### Run Neo.CLI on testnet at debug mode
 
-Paste the content of `neo-cli/config.testnet.json` into `neo-cli/config.json`, replacing the original `neo-cli/config.json`. This ensures that neo-cli connects to the testnet instead of the mainnet. 
+Paste the content of `Neo.CLI/config.testnet.json` into `Neo.CLI/config.json`, replacing the original `Neo.CLI/config.json`. This ensures that Neo.CLI connects to the testnet instead of the mainnet. 
 
-Set neo-cli as the Startup project and debug it. It is likely that the cli would not run properly and throw some exceptions about leveldb. Just copy `libleveldb.dll` to `neo-cli\bin\Debug\net6.0`, and `LevelDBStore.dll` to `neo-cli/bin/Debug/net6.0/Plugins/LevelDBStore`. 
+Set Neo.CLI as the Startup project and debug it. It is likely that the cli would not run properly and throw some exceptions about leveldb. Just copy `libleveldb.dll` to `Neo.CLI\bin\Debug\net8.0`, and `LevelDBStore.dll` to `Neo.CLI/bin/Debug/net8.0/Plugins/LevelDBStore`. 
 
-If neo-cli is started properly, execute `show state` and watch if it is synchronizing blocks. 
+If Neo.CLI is started properly, execute `show state` and watch if it is synchronizing blocks. 
 
 #### Sync blocks at insane speed!
 
-Stop neo-cli. Put `chain.0.acc` at `neo-cli\bin\Debug\net6.0`. Add `--noverify` flag in neo-cli debug properties. 
+Stop Neo.CLI. Put `chain.0.acc` at `Neo.CLI\bin\Debug\net8.0`. Add `--noverify 1` flag in Neo.CLI debug properties. 
 
 ![noverify](images/noverify.png)
 
-Launch neo-cli. 
+Launch Neo.CLI. 
 
 #### Install RpcServer plugin
 
-Plugins should be put in `neo-cli/bin/Debug/net6.0/Plugins`. Assuming that you are going to install `SomePlugin`, you need to create a directory `SomePlugin` in `Plugins`, and put `SomePlugin.dll`  and its `config.json` into `Plugins/SomePlugin/`.
+Plugins should be put in `Neo.CLI/bin/Debug/net8.0/Plugins`. Assuming that you are going to install `SomePlugin`, you need to create a directory `SomePlugin` in `Plugins`, and put `SomePlugin.dll`  and its `config.json` into `Plugins/SomePlugin/`.
 
-If you did not let `neo-cli` refer to `RpcServer`, a simple way here is just to execute `install RpcServer` in `neo-cli` (But remember that the installed `RpcServer` cannot be debugged!)
+If you did not let `Neo.CLI` refer to `RpcServer`, a simple way here is just to execute `install RpcServer` in `Neo.CLI` (But remember that the installed `RpcServer` cannot be debugged!)
 
-For a debuggable `RpcServer`, you can replace the installed `neo-cli/bin/Debug/net6.0/Plugins/RpcServer/RpcServer.dll` with that compiled in debugging mode from the project RpcServer in `neo-modules`. Specifically, add project reference `neo` to `RpcServer`, and build `RpcServer` in debug mode. Move `RpcServer.dll` and maybe directory `RpcServer` from `neo-modules/src/RpcServer/bin/Debug/net6.0/` to `neo-cli/bin/Debug/net6.0/Plugins/RpcServer`. Add project reference `RpcServer` for `neo-cli`.  
+For a debuggable `RpcServer`, you can replace the installed `Neo.CLI/bin/Debug/net8.0/Plugins/RpcServer/RpcServer.dll` with that compiled in debugging mode from the project RpcServer in `neo-modules`. Specifically, add project reference `neo` to `RpcServer`, and build `RpcServer` in debug mode. Move `RpcServer.dll` and maybe directory `RpcServer` from `neo-modules/src/RpcServer/bin/Debug/net8.0/` to `Neo.CLI/bin/Debug/net8.0/Plugins/RpcServer`. Add project reference `RpcServer` for `Neo.CLI`.  
 
-Now edit `neo-cli/bin/Debug/net6.0/Plugins/RpcServer/config.json` to make sure that your configs matches the testnet. For example, the `network` value should be the same as that in `neo-cli/config.testnet.json`, and meanwhile you probably want to leave `"DisabledMethods": []`. You may also consider larger values for `MaxGasInvoke`, `MaxConcurrentConnections` and `MaxIteratorResultItems`. Watch my config as an example for testnet T5 (with neo-cli 3.5.0):
+Now edit `Neo.CLI/bin/Debug/net8.0/Plugins/RpcServer/config.json` to make sure that your configs matches the testnet. For example, the `network` value should be the same as that in `Neo.CLI/config.testnet.json`, and meanwhile you probably want to leave `"DisabledMethods": []`. You may also consider larger values for `MaxGasInvoke`, `MaxConcurrentConnections` and `MaxIteratorResultItems`. Watch my config as an example for testnet T5 (with Neo.CLI 3.5.0):
 
 ```json
 {
@@ -133,11 +139,11 @@ Now edit `neo-cli/bin/Debug/net6.0/Plugins/RpcServer/config.json` to make sure t
 }
 ```
 
-Restart neo-cli to ensure that RpcServer is actually started. 
+Restart Neo.CLI to ensure that RpcServer is actually started. 
 
-#### Wait for neo-cli block synchronization
+#### Wait for Neo.CLI block synchronization
 
-Execute `show state` in neo-cli, and wait for your local blocks to be synced to the latest height. **The info about your peers' IP/port/listen/height is NOT displayed when the offline package `chain.0.acc` is being used.** Do not panic if you run into a few exceptions (e.g. `Method XXX with X parameters doesn't exist in the contract ...`, `Object reference not set to an instance of an object.`). These exceptions are caused by invalid transactions relayed by users. 
+Execute `show state` in Neo.CLI, and wait for your local blocks to be synced to the latest height. **The info about your peers' IP/port/listen/height is NOT displayed when the offline package `chain.0.acc` is being used.** Do not panic if you run into a few exceptions (e.g. `Method XXX with X parameters doesn't exist in the contract ...`, `Object reference not set to an instance of an object.`). These exceptions are caused by invalid transactions relayed by users. 
 
 ![block-sync](images/block-sync.png)
 
@@ -160,9 +166,9 @@ Congratulations. You are now probably able to inspect the execution of all the a
 
 #### Test RPC calls
 
-Make sure your neo-cli has been equipped with the plugin `RpcServer`, and that the config (especially `Network`, `MaxGasInvoke`, `MaxFee`, `MaxIteratorResultItems`) is proper. You probably would like to leave `"DisabledMethods": []` to `openwallet` from another process. 
+Make sure your Neo.CLI has been equipped with the plugin `RpcServer`, and that the config (especially `Network`, `MaxGasInvoke`, `MaxFee`, `MaxIteratorResultItems`) is proper. You probably would like to leave `"DisabledMethods": []` to `openwallet` from another process. 
 
-Certainly you can use tools like [Hoppscotch](https://github.com/hoppscotch/hoppscotch) as an HTTP client, but you may also use the client module [neo-fairy-client](https://github.com/Hecate2/neo-fairy-client/) with `git clone git@github.com:Hecate2/neo-fairy-client.git` as a non-official Python RPC client. This package rules out the difficulty from data conversion, and allows you to interact with neo-cli in very natural, detail-irrelevant codes. There are also official RPC clients built in a series of common programming languages, included in official Neo SDKs. Consider [neo-test](https://github.com/ngdenterprise/neo-test) or `NeoRpcClient` in [neo-mamba](https://github.com/CityOfZion/neo-mamba).
+Certainly you can use tools like [Hoppscotch](https://github.com/hoppscotch/hoppscotch) as an HTTP client, but you may also use the client module [neo-fairy-client](https://github.com/Hecate2/neo-fairy-client/) with `git clone git@github.com:Hecate2/neo-fairy-client.git` as a non-official Python RPC client. This package rules out the difficulty from data conversion, and allows you to interact with Neo.CLI in very natural, detail-irrelevant codes. There are also official RPC clients built in a series of common programming languages, included in official Neo SDKs. Consider [neo-test](https://github.com/ngdenterprise/neo-test) or `NeoRpcClient` in [neo-mamba](https://github.com/CityOfZion/neo-mamba).
 
 Make sure your `invokefunction` calls can break at breakpoints in `neo-vm`. If your RPC calls are well debuggable, consider upgrading your `RpcServer` with [neo-fairy-test](https://github.com/Hecate2/neo-fairy-test/).
 
@@ -207,7 +213,7 @@ dumpnef YourNefFile.nef > YourNefFile.nef.txt
 
 #### Using [Fairy](https://github.com/Hecate2/neo-fairy-test/)
 
-This is something similar to but more powerful than [hardhat](https://github.com/NomicFoundation/hardhat) and [truffle](https://github.com/trufflesuite/truffle). Try placing a Fairy [release](https://github.com/Hecate2/neo-fairy-test/releases) as a plugin of neo-cli (which may not work correctly on different computers...) or building Fairy by yourself along with the source codes required by [Fairy.csproj](https://github.com/Hecate2/neo-fairy-test/blob/master/Fairy.csproj) (which requires a deeper understanding of C# building process). If you have trouble building or resolving project dependencies of Fairy, you may refer to the dependencies of [neo-modules](https://github.com/neo-project/neo-modules). 
+This is something similar to but more powerful than [hardhat](https://github.com/NomicFoundation/hardhat) and [truffle](https://github.com/trufflesuite/truffle). Try placing a Fairy [release](https://github.com/Hecate2/neo-fairy-test/releases) as a plugin of Neo.CLI (which may not work correctly on different computers...) or building Fairy by yourself along with the source codes required by [Fairy.csproj](https://github.com/Hecate2/neo-fairy-test/blob/master/Fairy.csproj) (which requires a deeper understanding of C# building process). If you have trouble building or resolving project dependencies of Fairy, you may refer to the dependencies of [neo-modules](https://github.com/neo-project/neo-modules). 
 
 **You are now able to debug all Neo smart contracts.** 
 
