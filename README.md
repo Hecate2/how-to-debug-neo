@@ -38,6 +38,8 @@ git clone git@github.com:neo-project/neo.git
 
 And you may still need to download the [release](https://github.com/neo-project/neo-node/releases) of `Neo.CLI`. This is just for two `leveldb` dll files inside the released zip file: `Plugins/LevelDBStore.dll` and `libleveldb.dll`. The dlls will be copied into the compiled neo-node later. 
 
+Neo <= 3.7.4:
+
 Then you should also 
 
 ```bash
@@ -52,6 +54,10 @@ neo-modules/neo/src/Neo.CLI
 
 Do not forget to consider `git checkout` a proper commit or branch for each repository, so that the versions of all these codes can match. 
 
+Neo > 3.7.4:
+
+neo-modules have been migrated into `neo/src/Plugins`.
+
 #### [Download the **N3 testnet** offline package](https://sync.ngd.network/)
 
 Make sure you are actually downloading N3 testnet 5 (N3T5) full offline package. Unzip it and get the file `chain.0.acc`.
@@ -64,7 +70,7 @@ The following steps may fail if Visual Studio is not installed.
 
 **This is an outdated chapter for the time when Neo had separate repositories for each project. I keep the contents because they may still be helpful.**
 
-Add projects `neo`, `neo-vm` and `RpcServer` (in `neo-modules`) to the solution. Add project `neo` as project reference for neo-cli. If there is any compilation error, especially package dependency conflict, consider adding neo-vm as project reference for neo-cli. The package dependencies of neo-cli should be cleared. Optionally and optimally, let `neo-cli` refer to project `RpcServer`, and `RpcServer` refer to project `neo`. 
+Add projects `neo`, `neo-vm` and `RpcServer` (in `neo-modules` or `neo/src/Plugins`) to the solution. Add project `neo` as project reference for neo-cli. If there is any compilation error, especially package dependency conflict, consider adding neo-vm as project reference for neo-cli. The package dependencies of neo-cli should be cleared. Optionally and optimally, let `neo-cli` refer to project `RpcServer`, and `RpcServer` refer to project `neo`. 
 
 ![add-existing-project](images/add-existing-project.png)
 
