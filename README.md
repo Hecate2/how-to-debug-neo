@@ -10,7 +10,7 @@ Some screenshots in this guide might be in Chinese.
 
 Because Visual Studio 2019 does not natively support .NET 6.0 to .NET 8.0, we had better use the latest version. 
 
-Neo 3.5.* is built with .NET 6.0, and Neo 3.6.* with .NET 7.0, Neo 3.7.* with .NET 8.0.
+Neo 3.5.* is built with .NET 6.0, and Neo 3.6.* with .NET 7.0, Neo 3.7.* with .NET 8.0, Neo 3.8.* with .NET 9.0 (expected).
 
 Choose .NET desktop development and C++ desktop development, and wipe of some unnecessary components. Here we do not consider Python, but you may also install Python workloads in Visual Studio. The following workloads should be enough (C++ environments are for Python). You can also install Windows 10 SDK (after you finish this tutorial), so that you can compile C(++)-related dependencies in the future. 
 
@@ -36,7 +36,11 @@ pip install requests
 git clone git@github.com:neo-project/neo.git
 ```
 
-And you may still need to download the [release](https://github.com/neo-project/neo-node/releases) of `Neo.CLI`. This is just for two `leveldb` dll files inside the released zip file: `Plugins/LevelDBStore.dll` and `libleveldb.dll`. The dlls will be copied into the compiled neo-node later. 
+And you may still need to download the [release](https://github.com/neo-project/neo/releases) of `Neo.CLI` (Do not use v3.7.6 if you see it). This is just for two `leveldb` dll files inside the released zip file: `Plugins/LevelDBStore.dll` and `libleveldb.dll`. The dlls will be copied into the compiled neo-node later. Or, you may build `LevelDBStore.dll` from `neo/src/Plugins/LevelDBStore/LevelDBStore.csproj`.
+
+Neo > 3.7.4:
+
+Ignore this and the following paragraph. neo-modules have been migrated into `neo/src/Plugins`. 
 
 Neo <= 3.7.4:
 
@@ -53,10 +57,6 @@ neo-modules/neo/src/Neo.CLI
 ```
 
 Do not forget to consider `git checkout` a proper commit or branch for each repository, so that the versions of all these codes can match. 
-
-Neo > 3.7.4:
-
-neo-modules have been migrated into `neo/src/Plugins`.
 
 #### [Download the **N3 testnet** offline package](https://sync.ngd.network/)
 
